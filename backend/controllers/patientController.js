@@ -78,3 +78,18 @@ exports.updatePatient = async (req, res) => {
         res.status(500).json({ error: "Error en el servidor" });
     }
 };
+
+exports.getPatientById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const patient = await Patient.findById(id); // Buscar paciente por ID
+        if (!patient) {
+            return res.status(404).json({ message: "Paciente no encontrado" });
+        }
+        res.json(patient);
+    } catch (error) {
+        console.error("Error al obtener el paciente:", error);
+        res.status(500).json({ message: "Error al obtener el paciente" });
+    }
+};

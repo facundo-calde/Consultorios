@@ -18,7 +18,8 @@
     <header>
         <nav class="navbar">
             <div class="container-fluid">
-                <div class="more"><img src="assets/logoalfaro.jpg" alt="Logo Consultorios" class="logo-alfaro" title="Logo consultorios Alfaro"></div>
+                <div class="more"><img src="assets/logoalfaro.jpg" alt="Logo Consultorios" class="logo-alfaro"
+                        title="Logo consultorios Alfaro"></div>
                 <div class="calendar"><a href="calendar.html" title="Calendario">Calendario</a></div>
                 <div class="agenda"><a href="agenda.html" title="Agenda">Agenda</a></div>
                 <div class="patients"><a href="patients.html" title="Pacientes">Pacientes</a></div>
@@ -43,7 +44,7 @@
             <option value="traumatologia">Traumatología</option>
         </select>
     </div>
-    
+
 
     <div id="calendar"></div>
 
@@ -60,12 +61,11 @@
                 </table>
             </div>
 
-            <!-- Formulario de edición (inicialmente oculto) -->
-            <div id="editSlotForm" style="display:none; margin-top: 20px;">
-                <h3>Editar turno</h3>
+            <!-- Modal con clase modal-content3 -->
+            <div id="editSlotForm" class="modal-content3" style="display:none; margin-top: 20px;">
                 <form id="formEditTurno">
-                    <label for="newTime">Hora del turno:</label>
-                    <input type="time" id="newTime" name="newTime" required><br><br>
+                    <label for="patientName">Paciente:</label>
+                    <input type="text" id="patientName" name="patientName" required readonly><br><br>
 
                     <label for="newStatus">Estado del turno:</label>
                     <select id="newStatus" name="newStatus" required>
@@ -73,32 +73,33 @@
                         <option value="ocupado">Ocupado</option>
                         <option value="en ejecución">En ejecución</option>
                     </select><br><br>
-
-                    <button type="submit" id="saveChangesBtn">Guardar cambios</button>
-                    <button type="button" id="cancelEditBtn">Cancelar</button>
                 </form>
             </div>
+
+
+
+
 
             <button id="close-modal">Cerrar</button>
         </div>
     </div>
 
     <!-- Modal de Reserva de Turno -->
-<div id="reserve-turno-modal" class="modal" style="display:none;">
-    <div class="modal-content2">
-        <form id="formReservaTurno">
-            <!-- Otros campos -->
-            <label for="professional">Profesional:</label>
-            <select id="professional" name="professional" required>
-                <option value="">Selecciona un profesional</option>
-            </select><br><br>
-            <button type="submit" id="confirmReservationBtn">Confirmar reserva</button>
-            <button type="button" id="cancelReservationBtn">Cancelar</button>
-        </form>
+    <div id="reserve-turno-modal" class="modal" style="display:none;">
+        <div class="modal-content2">
+            <form id="formReservaTurno">
+                <!-- Otros campos -->
+                <label for="professional">Profesional:</label>
+                <select id="professional" name="professional" required>
+                    <option value="">Selecciona un profesional</option>
+                </select><br><br>
+                <button type="submit" id="confirmReservationBtn">Confirmar reserva</button>
+                <button type="button" id="cancelReservationBtn">Cancelar</button>
+            </form>
+        </div>
     </div>
-</div>
 
-      
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- FullCalendar JS -->
