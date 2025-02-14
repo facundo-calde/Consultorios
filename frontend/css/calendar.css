@@ -190,8 +190,7 @@ button.fc-today-button.fc-button.fc-button-primary:hover {
 }
 
 /* Modal content común */
-.modal-content1,
-.modal-content2 {
+.modal-content1 {
   background-color: rgb(243, 242, 242);
   border-radius: 8px;
   width: 100%;
@@ -507,7 +506,171 @@ label {
 
 /* Cambia el color de las opciones al pasar el mouse */
 #select-specialty select option:hover {
-  background-color: #007bff;
+  background-color: #263d68;
   color: white;
 }
 
+/* Estilos generales para el modal */
+.swal2-popup {
+  font-family: "Arial", sans-serif; /* Cambiar fuente del modal */
+  display: flex;
+  background-color: #f9f9f9;
+  padding: 5px;
+  border-radius: 8px;
+  height: 95vh;
+  margin: 0;
+}
+
+.swal2-title {
+  font-size: 15px;  /* Cambia este valor según el tamaño que desees */
+  font-weight: bold;
+  color: #263d68;
+  padding: 5px 0 0 0;
+  margin-bottom: 10px;
+}
+
+#swal2-html-container {
+  display: flex;
+  width: 100%;               /* Aseguramos que ocupe todo el ancho del modal */
+  padding: 0;
+}
+
+#swal-patient{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#swal-firstName{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#swal-lastName{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#swal-professional{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#swal-specialty{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#swal-specialty{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#swal-time{
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* Estilo para el contenedor de sugerencias de DNI */
+#dni-suggestions {
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+/* Estilo para cada sugerencia dentro de DNI */
+#dni-suggestions div {
+  padding: 0;
+  cursor: pointer;
+  font-size: 12px;
+  width: 100%;
+  border: none;
+  margin: 0;
+}
+
+#dni-suggestions div:hover {
+  background-color: #263d68;
+  color: white;
+  border-radius: 5px;
+}
+
+/* Estilo para el botón de "Confirmar Reserva" */
+.swal2-confirm {
+  background-color: #263d68;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+/* Estilo para el botón de "Cancelar" */
+.swal2-cancel {
+  background-color: #f1031ba5;
+  color: white;
+  font-size: 13px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+/* Hover effect for confirm and cancel buttons */
+.swal2-confirm:hover {
+  background-color: white;
+  color: #263d68;
+}
+
+.swal2-cancel:hover {
+  background-color: white;
+  color: #f1031ba5;
+}

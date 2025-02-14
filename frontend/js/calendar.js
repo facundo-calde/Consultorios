@@ -399,24 +399,24 @@ function getStatusColorClass(status) {
         Swal.fire({
           title: "Reservar Turno",
           html: `
-                    <label for="swal-patient">Paciente (DNI):</label>
+                    <label for="swal-patient">Paciente:</label>
                     <input type="text" id="swal-patient" class="swal2-input" placeholder="Ingrese el DNI" required>
                     <div id="dni-suggestions" style="max-height: 100px; overflow-y: auto;"></div>
 
-                    <label for="swal-firstName">Nombre:</label>
-                    <input type="text" id="swal-firstName" class="swal2-input" placeholder="Nombre" readonly>
+                    <label for="swal-firstName">Nombre:         </label><br>
+                    <input type="text" id="swal-firstName" class="swal2-input" placeholder="Nombre" readonly><br>
 
-                    <label for="swal-lastName">Apellido:</label>
-                    <input type="text" id="swal-lastName" class="swal2-input" placeholder="Apellido" readonly>
+                    <label for="swal-lastName">Apellido:       </label><br>
+                    <input type="text" id="swal-lastName" class="swal2-input" placeholder="Apellido" readonly><br>
 
-                    <label for="swal-professional">Profesional:</label>
-                    <select id="swal-professional" class="swal2-input"></select>
+                    <label for="swal-professional">Profesional:    </label><br>
+                    <select id="swal-professional" class="swal2-input"></select><br>
 
-                    <label for="swal-specialty">Especialidad:</label>
-                    <input type="text" id="swal-specialty" class="swal2-input" value="${specialty}" readonly>
+                    <label for="swal-specialty">Especialidad:   </label><br>
+                    <input type="text" id="swal-specialty" class="swal2-input" value="${specialty}" readonly><br>
 
-                    <label for="swal-time">Hora del turno:</label>
-                    <input type="time" id="swal-time" class="swal2-input" value="${slotId}" required>
+                    <label for="swal-time">Hora del turno:</label><br>
+                    <input type="time" id="swal-time" class="swal2-input" value="${slotId}" required><br>
                 `,
           showCancelButton: true,
           confirmButtonText: "Confirmar Reserva",
@@ -426,44 +426,36 @@ function getStatusColorClass(status) {
             fetch(`http://localhost:3000/api/calendar/profesionales/disponibles/${selectedDate}`)
               .then(res => res.json())
               .then(professionals => {
-                console.log("📢 Profesionales recibidos desde la API:", professionals);
-
                 const select = document.getElementById("swal-professional");
                 select.innerHTML = ""; // Limpiar el select antes de cargar nuevos datos
 
-                // 🔹 Verificar si `professionals` es un array
+                // Verificar si no hay profesionales disponibles
                 if (!Array.isArray(professionals) || professionals.length === 0) {
-                  console.warn("⚠️ No hay profesionales disponibles.");
                   const option = document.createElement("option");
                   option.textContent = "No hay profesionales disponibles";
                   option.disabled = true;
-                  option.selected = true; // ✅ Hace que esta opción aparezca por defecto en el select
+                  option.selected = true;
                   select.appendChild(option);
-                  return; // Salimos de la función para evitar errores
+                  return; 
                 }
 
-                // 🔹 Filtrar profesionales por especialidad normalizada
+                // Filtrar profesionales por especialidad
                 const filteredProfessionals = professionals.filter(prof => {
                   const profSpecialty = Array.isArray(prof.especialidad)
                     ? prof.especialidad.map(s => normalizeText(s))
                     : normalizeText(prof.especialidad);
-
                   return Array.isArray(profSpecialty)
                     ? profSpecialty.includes(normalizedSpecialty)
                     : profSpecialty === normalizedSpecialty;
                 });
 
-                console.log("✅ Profesionales filtrados:", filteredProfessionals);
-
-                // 🔹 Si no hay profesionales filtrados, mostrar mensaje
                 if (filteredProfessionals.length === 0) {
                   const option = document.createElement("option");
                   option.textContent = "No hay profesionales disponibles";
                   option.disabled = true;
-                  option.selected = true; // ✅ Aparece por defecto
+                  option.selected = true;
                   select.appendChild(option);
                 } else {
-                  // 🔹 Agregar solo los profesionales que cumplen los criterios
                   filteredProfessionals.forEach(prof => {
                     const option = document.createElement("option");
                     option.value = prof._id;
@@ -485,35 +477,31 @@ function getStatusColorClass(status) {
             const dniInput = document.getElementById("swal-patient");
             dniInput.addEventListener("input", () => {
               const dniValue = dniInput.value.replace(/\D/g, ""); // Eliminar caracteres no numéricos
-              if (dniValue.length >= 1) { // Ahora comienza la búsqueda desde el primer carácter
+              if (dniValue.length >= 1) { // Búsqueda desde el primer carácter
                 fetch(`http://localhost:3000/api/patients/buscarPorDNI/${dniValue}`)
                   .then(res => res.json())
                   .then(patients => {
-                    if (!Array.isArray(patients)) {
-                      patients = patients ? [patients] : [];
-                    }
-
                     const suggestionsContainer = document.getElementById("dni-suggestions");
-                    suggestionsContainer.innerHTML = "";
+                    suggestionsContainer.innerHTML = ""; // Limpiar las sugerencias anteriores
 
-                    if (patients.length === 0) {
-                      suggestionsContainer.innerHTML = `<div style="padding: 5px;">No se encontraron pacientes.</div>`;
-                    }
-
-                    patients.forEach(patient => {
-                      const option = document.createElement("div");
-                      option.textContent = `${patient.dni} - ${patient.firstName} ${patient.lastName}`;
-                      option.style.cursor = "pointer";
-                      option.style.padding = "5px";
-                      option.style.borderBottom = "1px solid #ddd";
-                      option.addEventListener("click", () => {
-                        dniInput.value = patient.dni;
-                        document.getElementById("swal-firstName").value = patient.firstName;
-                        document.getElementById("swal-lastName").value = patient.lastName;
-                        suggestionsContainer.innerHTML = "";
+                    if (!Array.isArray(patients) || patients.length === 0) {
+                      suggestionsContainer.innerHTML = "<div style='padding: 5px;'>No se encontraron pacientes.</div>";
+                    } else {
+                      patients.forEach(patient => {
+                        const option = document.createElement("div");
+                        option.textContent = `${patient.dni} - ${patient.firstName} ${patient.lastName}`;
+                        option.style.cursor = "pointer";
+                        option.style.padding = "5px";
+                        option.style.borderBottom = "1px solid #ddd";
+                        option.addEventListener("click", () => {
+                          dniInput.value = patient.dni;
+                          document.getElementById("swal-firstName").value = patient.firstName || '';  // Asegurarse que no sea undefined
+                          document.getElementById("swal-lastName").value = patient.lastName || '';  // Asegurarse que no sea undefined
+                          suggestionsContainer.innerHTML = "";
+                        });
+                        suggestionsContainer.appendChild(option);
                       });
-                      suggestionsContainer.appendChild(option);
-                    });
+                    }
                   })
                   .catch(error => {
                     console.error("❌ Error al buscar pacientes:", error);
@@ -522,7 +510,7 @@ function getStatusColorClass(status) {
             });
           },
           preConfirm: () => {
-            // 🔹 Obtener datos ingresados
+            // Obtener datos ingresados
             const reservationData = {
               time: document.getElementById("swal-time").value,
               date: selectedDate,
@@ -533,7 +521,7 @@ function getStatusColorClass(status) {
               especialidad: document.getElementById("swal-specialty").value
             };
 
-            // 🔹 Validar que todos los datos estén completos
+            // Validar que todos los datos estén completos
             if (!reservationData.paciente || !reservationData.firstName || !reservationData.lastName || !reservationData.time || !reservationData.profesional) {
               Swal.showValidationMessage("Por favor, completa todos los campos.");
               return false;
@@ -543,7 +531,7 @@ function getStatusColorClass(status) {
           }
         }).then((result) => {
           if (result.isConfirmed) {
-            makeReservation(result.value);  // ✅ Llama a tu función sin modificarla
+            makeReservation(result.value);  // Llama a tu función sin modificarla
           }
         });
       })
@@ -556,6 +544,7 @@ function getStatusColorClass(status) {
         });
       });
   }
+
 
 
 
