@@ -259,7 +259,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function showReservationForm(slotId) {
-    const apiUrl = `http://localhost:3000/api/calendar/turnos/buscar?date=${selectedDate}&time=${slotId}&specialty=${selectedSpecialty}`;
+    // Función para normalizar texto (elimina acentos, pasa a minúsculas y elimina espacios extra)
+    const normalizeText = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+    // Asegurar que haya una especialidad seleccionada, por defecto "Odontología"
+    const specialty = selectedSpecialty && selectedSpecialty.trim() !== "" ? selectedSpecialty : "Odontología";
+    const normalizedSpecialty = normalizeText(specialty);
+
+    const apiUrl = `http://localhost:3000/api/calendar/turnos/buscar?date=${selectedDate}&time=${slotId}&specialty=${specialty}`;
 
     fetch(apiUrl)
       .then(response => response.json())
@@ -281,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <select id="swal-professional" class="swal2-input"></select>
 
                     <label for="swal-specialty">Especialidad:</label>
-                    <input type="text" id="swal-specialty" class="swal2-input" value="${selectedSpecialty}" readonly>
+                    <input type="text" id="swal-specialty" class="swal2-input" value="${specialty}" readonly>
 
                     <label for="swal-time">Hora del turno:</label>
                     <input type="time" id="swal-time" class="swal2-input" value="${slotId}" required>
@@ -294,25 +301,52 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`http://localhost:3000/api/calendar/profesionales/disponibles/${selectedDate}`)
               .then(res => res.json())
               .then(professionals => {
+                console.log("📢 Profesionales recibidos desde la API:", professionals);
+                console.log("📢 Especialidad seleccionada para filtrar:", specialty);
+
                 const select = document.getElementById("swal-professional");
-                professionals.forEach(prof => {
+                select.innerHTML = ""; // Limpiar el select antes de cargar nuevos datos
+
+                // 🔹 Filtrar profesionales por especialidad normalizada
+                const filteredProfessionals = professionals.filter(prof => {
+                    const profSpecialty = Array.isArray(prof.especialidad) 
+                        ? prof.especialidad.map(s => normalizeText(s)) 
+                        : normalizeText(prof.especialidad);
+
+                    console.log(`🔍 Revisando profesional: ${prof.nombre} ${prof.apellido} - Especialidad normalizada:`, profSpecialty);
+                    
+                    return Array.isArray(profSpecialty) 
+                        ? profSpecialty.includes(normalizedSpecialty) 
+                        : profSpecialty === normalizedSpecialty;
+                });
+
+                console.log("✅ Profesionales filtrados:", filteredProfessionals);
+
+                if (filteredProfessionals.length === 0) {
+                  console.warn("⚠️ No hay profesionales disponibles con la especialidad seleccionada.");
+                }
+
+                // 🔹 Agregar solo los profesionales que cumplen los criterios
+                filteredProfessionals.forEach(prof => {
                   const option = document.createElement("option");
                   option.value = prof._id;
                   option.textContent = `${prof.nombre} ${prof.apellido}`;
                   select.appendChild(option);
                 });
+              })
+              .catch(error => {
+                console.error("❌ Error al obtener profesionales:", error);
               });
 
             // 🔹 Activar búsqueda de pacientes por DNI en tiempo real
             const dniInput = document.getElementById("swal-patient");
             dniInput.addEventListener("input", () => {
-              const dniValue = dniInput.value.replace(/\D/g, ""); // Eliminar puntos y caracteres no numéricos
+              const dniValue = dniInput.value.replace(/\D/g, ""); // Eliminar caracteres no numéricos
               if (dniValue.length >= 3) {
                 fetch(`http://localhost:3000/api/patients/buscarPorDNI/${dniValue}`)
                   .then(res => res.json())
                   .then(patients => {
                     if (!Array.isArray(patients)) {
-                      // Si no es un array, lo convertimos en uno
                       patients = patients ? [patients] : [];
                     }
 
@@ -378,7 +412,10 @@ document.addEventListener('DOMContentLoaded', function () {
           text: "No se encontró el turno o hubo un problema con la API.",
         });
       });
-  }
+}
+
+
+
 
 
 
