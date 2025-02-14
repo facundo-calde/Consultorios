@@ -68,37 +68,40 @@ exports.getProfesionalesDisponiblesPorFecha = async (req, res) => {
     }
 
     // 🔹 Crear un objeto Date de forma segura
-    const fechaProcesada = new Date(`${fecha}T00:00:00Z`); // Agregamos "T00:00:00Z" para evitar problemas de zona horaria
-    console.log("📢 Fecha convertida a Date:", fechaProcesada);
-
-    // 🔹 Obtener el día de la semana correctamente
     const dateObj = new Date(`${fecha}T00:00:00Z`); // Aseguramos que la fecha esté en UTC
-    const dayOfWeek = removeAccents(
+    
+    // 🔹 Función para normalizar el texto
+    const normalizeText = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+    // 🔹 Obtener el día de la semana correctamente y normalizarlo
+    const dayOfWeek = normalizeText(
         new Intl.DateTimeFormat('es-ES', { weekday: 'long', timeZone: 'UTC' }).format(dateObj)
     );
-    console.log("📅 Fecha UTC procesada:", dateObj.toISOString());
-    console.log("📅 Día de la semana detectado:", dayOfWeek);
-    
 
-    console.log("📢 Día de la semana procesado:", dayOfWeek);
+    console.log("📅 Día de la semana detectado (normalizado):", dayOfWeek);
 
     // 🔹 Buscar en la base de datos
-    const profesionalesDisponibles = await Profesional.find({
-      diasLaborales: { $in: [dayOfWeek] }
+    const profesionalesDisponibles = await Profesional.find({}).lean(); // Obtener todos
+
+    // 🔹 Normalizar y filtrar los profesionales disponibles
+    const filteredProfessionals = profesionalesDisponibles.filter(prof => {
+        const normalizedWorkDays = prof.diasLaborales.map(dia => normalizeText(dia));
+        return normalizedWorkDays.includes(dayOfWeek);
     });
 
-    console.log("📢 Profesionales encontrados:", profesionalesDisponibles);
+    console.log("📢 Profesionales filtrados:", filteredProfessionals);
 
-    if (profesionalesDisponibles.length === 0) {
+    if (filteredProfessionals.length === 0) {
       return res.status(404).json({ message: "No hay profesionales disponibles para esta fecha." });
     }
 
-    res.json(profesionalesDisponibles);
+    res.json(filteredProfessionals);
   } catch (error) {
     console.error("❌ Error al obtener los profesionales disponibles:", error);
     res.status(500).json({ message: "Error al obtener los profesionales disponibles" });
   }
 };
+
 
 
 

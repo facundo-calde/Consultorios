@@ -309,15 +309,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // 🔹 Filtrar profesionales por especialidad normalizada
                 const filteredProfessionals = professionals.filter(prof => {
-                    const profSpecialty = Array.isArray(prof.especialidad) 
-                        ? prof.especialidad.map(s => normalizeText(s)) 
-                        : normalizeText(prof.especialidad);
+                  const profSpecialty = Array.isArray(prof.especialidad)
+                    ? prof.especialidad.map(s => normalizeText(s))
+                    : normalizeText(prof.especialidad);
 
-                    console.log(`🔍 Revisando profesional: ${prof.nombre} ${prof.apellido} - Especialidad normalizada:`, profSpecialty);
-                    
-                    return Array.isArray(profSpecialty) 
-                        ? profSpecialty.includes(normalizedSpecialty) 
-                        : profSpecialty === normalizedSpecialty;
+                  console.log(`🔍 Revisando profesional: ${prof.nombre} ${prof.apellido} - Especialidad normalizada:`, profSpecialty);
+
+                  return Array.isArray(profSpecialty)
+                    ? profSpecialty.includes(normalizedSpecialty)
+                    : profSpecialty === normalizedSpecialty;
                 });
 
                 console.log("✅ Profesionales filtrados:", filteredProfessionals);
@@ -412,12 +412,7 @@ document.addEventListener('DOMContentLoaded', function () {
           text: "No se encontró el turno o hubo un problema con la API.",
         });
       });
-}
-
-
-
-
-
+  }
 
   function makeReservation(reservationData) {
     console.log('Datos de la reserva:', reservationData);
