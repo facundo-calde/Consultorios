@@ -198,38 +198,33 @@ exports.eliminarTurno = async (req, res) => {
 
 // Modificar un turno
 exports.modificarTurno = async (req, res) => {
-  const { id } = req.params;
-  const { status, time } = req.body;
+  const { id } = req.params; // Asegúrate de que el id esté presente en los parámetros de la URL
+  const { status } = req.body; // El nuevo estado
 
   try {
     // Buscar el turno por ID
     const turno = await Turno.findById(id);
-
     if (!turno) {
       return res.status(404).json({ message: 'Turno no encontrado' });
     }
 
-    // Obtener el paciente asociado a este turno
-    const pacienteId = turno.paciente;  // Asumiendo que el campo paciente contiene el ID del paciente
+    // Actualizar el estado del turno
+    turno.status = status; // Solo cambiamos el estado, no la hora
 
-    // Obtener los detalles del paciente usando patientController
-    const patient = await patientController.getPatientById(pacienteId);
+    // Guardar los cambios
+    await turno.save();
 
-    if (!patient) {
-      return res.status(404).json({ message: 'Paciente no encontrado' });
-    }
-
-    // Aquí puedes devolver la información del paciente junto con el turno
     return res.json({
-      turno,
-      paciente: patient // Ahora el paciente tiene nombre, apellido, dni, etc.
+      message: "Turno actualizado correctamente",
+      turno: turno
     });
-
   } catch (error) {
-    console.error("❌ Error al modificar el turno:", error);
-    res.status(500).json({ message: 'Error al modificar el turno' });
+    console.error("Error al modificar el turno:", error);
+    res.status(500).json({ message: "Hubo un problema al modificar el turno", error: error.message });
   }
 };
+
+
 
 exports.getTurnoByDetails = async (req, res) => {
   const { date, time, specialty } = req.query;

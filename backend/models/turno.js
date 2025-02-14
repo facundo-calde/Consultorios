@@ -13,9 +13,9 @@ const turnoSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: 'disponible',  // Por defecto los turnos están disponibles
-    enum: ['disponible', 'ocupado'],  // Los únicos dos estados posibles
-  },
+    default: 'Disponible',
+    enum: ['Disponible', 'Ocupado', 'En ejecución', 'Paciente asistió', 'Paciente no asistió'],  // Con acento en los valores
+},
   paciente: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Paciente',  // Referencia al modelo Paciente

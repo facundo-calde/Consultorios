@@ -267,67 +267,59 @@ document.addEventListener('DOMContentLoaded', function () {
                     const patientName = `${patient.firstName} ${patient.lastName}`;
                     console.log("Nombre del paciente:", patientName);
 
-                    // Asignar el nombre y apellido al campo de texto (solo lectura)
-                    const patientNameField = document.getElementById("patientName");
-                    if (patientNameField) {
-                        patientNameField.value = patientName; // Asigna el nombre y apellido
-                    }
-
-                    // Asignar el estado del turno
-                    const statusField = document.getElementById("newStatus");
-                    if (statusField) {
-                        statusField.value = turno.status; // Asigna el estado del turno
-                    }
-
                     // Mostrar el formulario de edición usando SweetAlert2
                     Swal.fire({
-                        title: "Editar Turno",
-                        html: document.getElementById("editSlotForm").innerHTML, // Tomamos el formulario de edición del HTML
-                        showCancelButton: true,
-                        confirmButtonText: "Guardar cambios",
-                        cancelButtonText: "Cancelar",
-                        willOpen: () => {
-                            // Asegurarnos de que los valores del formulario estén disponibles
-                            document.getElementById("patientName").value = patientName; // Nombre y apellido (solo lectura)
-                            document.getElementById("newStatus").value = turno.status; // Estado (editable)
-                        },
-                        preConfirm: () => {
-                            // Obtener los datos modificados (solo el estado)
-                            const newStatus = document.getElementById("newStatus").value;
-
-                            // Validar los datos
-                            if (!newStatus) {
-                                Swal.showValidationMessage("Por favor, selecciona un estado.");
-                                return false;
-                            }
-
-                            return {
-                                status: newStatus
-                            };
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Si se confirmaron los cambios, actualizar solo el estado en el servidor
-                            const updatedData = result.value;
-
-                            fetch(`http://localhost:3000/api/calendar/turnos/modificar/${selectedSlotId}`, {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(updatedData)
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log("Turno actualizado:", data);
-                                Swal.fire("Éxito", "El estado del turno ha sido modificado correctamente.", "success");
-                            })
-                            .catch(error => {
-                                console.error("Error al modificar el turno:", error);
-                                Swal.fire("Error", "Hubo un problema al modificar el turno.", "error");
-                            });
-                        }
-                    });
+                      title: "Editar Turno",
+                      html: `
+                          <div style="margin-top: 20px;">
+                              <label for="patientName">Paciente:</label>
+                              <input type="text" id="patientName" value="${patientName}" required readonly><br><br>
+                  
+                              <label for="newStatus">Estado del turno:</label>
+                              <select id="newStatus" name="newStatus" required>
+                                  <option value="Ocupado" ${turno.status === 'Ocupado' ? 'selected' : ''}>Ocupado</option>
+                                  <option value="En ejecución" ${turno.status === 'En ejecución' ? 'selected' : ''}>En ejecución</option>
+                                  <option value="Paciente asistió" ${turno.status === 'Paciente asistió' ? 'selected' : ''}>Paciente asistió</option>
+                                  <option value="Paciente no asistió" ${turno.status === 'Paciente no asistió' ? 'selected' : ''}>Paciente no asistió</option>
+                              </select><br><br>
+                          </div>
+                      `,
+                      showCancelButton: true,
+                      confirmButtonText: "Guardar cambios",
+                      cancelButtonText: "Cancelar",
+                      preConfirm: () => {
+                          const newStatus = document.getElementById("newStatus").value;
+                  
+                          if (!newStatus) {
+                              Swal.showValidationMessage("Por favor, selecciona un estado.");
+                              return false;
+                          }
+                  
+                          return { status: newStatus };
+                      }
+                  }).then((result) => {
+                      if (result.isConfirmed) {
+                          // Si se confirmaron los cambios, actualizar solo el estado en el servidor
+                          const updatedData = result.value;
+                  
+                          fetch(`http://localhost:3000/api/calendar/turnos/modificar/${selectedSlotId}`, {
+                              method: 'PUT',
+                              headers: {
+                                  'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify(updatedData)
+                          })
+                          .then(res => res.json())
+                          .then(data => {
+                              console.log("Turno actualizado:", data);
+                              Swal.fire("Éxito", "El estado del turno ha sido modificado correctamente.", "success");
+                          })
+                          .catch(error => {
+                              console.error("Error al modificar el turno:", error);
+                              Swal.fire("Error", "Hubo un problema al modificar el turno.", "error");
+                          });
+                      }
+                  });                  
                 })
                 .catch(error => {
                     console.error("Error al obtener los datos del paciente:", error);
@@ -339,6 +331,8 @@ document.addEventListener('DOMContentLoaded', function () {
             Swal.fire("Error", "Hubo un problema al obtener el turno.", "error");
         });
 }
+
+
 
 
 
