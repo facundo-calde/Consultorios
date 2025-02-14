@@ -1,0 +1,323 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lexend", serif;
+}
+
+body {
+  background-color: #eaeded4a;
+}
+
+header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 1000;
+  border-bottom: 1px solid #ccc;
+  max-height: 60px;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+}
+
+.navbar div {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.navbar .navbar-user {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: auto;
+  background-color: white;
+  text-align: center;
+}
+
+.logo-alfaro {
+  width: 40px;
+  height: 40px;
+}
+
+
+#btn-user {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  color: rgb(102, 102, 102);
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 3px grey;
+}
+
+#btn-user i {
+  font-size: 22px;
+  color: rgba(102, 102, 102, 0.915);
+  margin-right: 8px;
+}
+
+#btn-user:hover {
+  border-color: black;
+  transform: none;
+}
+
+#btn-user:focus {
+  outline: none;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #263d68;
+  font-size: 15px;
+  margin: 0 10px 0 10px;
+  text-shadow: 1px 1px 3px rgba(128, 128, 128, 0.608);
+}
+
+.navbar a:hover {
+  color: #ba0707;
+}
+
+.navbar a.selected {
+  color: #263d6855;
+}
+
+/* Estilo para la sección de buscar pacientes */
+.search-patient {
+  background-color: white;
+  width: 100%;
+  margin-top: 50px;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 2px rgba(128, 128, 128, 0.467);
+}
+
+#search-patient-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font-size: 12px;
+  color: #7e7f7f;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#search-dni {
+  padding: 10px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+  border-radius: 5px;
+  width: 80%;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 2px rgba(128, 128, 128, 0.392);
+}
+
+#add-patient {
+  background-color: white;
+  color: #263d68;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: 2px solid #263d68;
+  border-radius: 5px;
+  cursor: pointer;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+#add-patient:hover {
+  background-color: #263d68;
+  color: white;
+}
+
+/* 🔹 Contenedor que envuelve la tabla y la centra correctamente */
+.patients-table {
+  width: 100%;
+  display: flex;
+  justify-content: center;  /* Centrar la tabla horizontalmente */
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+/* 🔹 Estilo general de la tabla */
+#patients-table {
+  width: 100%;
+  max-width: 1000px; /* Evita que sea muy ancha en pantallas grandes */
+  border-collapse: separate; /* 🔥 Cambiado de collapse a separate */
+  border-spacing: 0; /* 🔥 Evita separación extra entre celdas */
+  background-color: white;
+  border-radius: 10px; /* Bordes redondeados */
+  overflow: hidden; /* 🔥 Mantiene el borde aplicado */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+/* 🔹 Aplica el border-radius solo a las esquinas superiores */
+#patients-table thead tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
+
+#patients-table thead tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* 🔹 Aplica el border-radius solo a las esquinas inferiores */
+#patients-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+#patients-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+/* 🔹 Encabezados */
+#patients-table th {
+  background-color: #263d68;
+  font-size: 12px;
+  color: white;
+  padding: 14px;
+  text-align: center;
+  font-weight: 400;
+}
+
+/* 🔹 Celdas de la tabla */
+#patients-table th,
+#patients-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd; /* Línea divisoria entre filas */
+  font-size: 14px;
+}
+
+/* 🔹 Estilo de filas alternas */
+#patients-table tr:nth-child(even) {
+  background-color: #f8f9fa; /* Gris claro */
+}
+
+/* 🔹 Efecto hover */
+#patients-table tr:hover {
+  background-color: #e3f2fd; /* Azul claro al pasar el mouse */
+}
+
+/* 🔹 Botones de acciones */
+#patients-table td:last-child {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 🔹 Estilo de los botones de acción */
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 1px;
+}
+
+/* 🔹 Estilo para el número de teléfono */
+.phone-cell a {
+  color: #25D366; /* Verde de WhatsApp */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaciado entre el icono y el número */
+}
+
+/* 🔹 Icono de WhatsApp */
+.phone-cell i {
+  font-size: 18px;
+  color: #25D366;
+}
+
+/* 🔹 Efecto hover */
+.phone-cell a:hover {
+  text-decoration: underline;
+}
+
+/* 🔹 Estilos generales del modal */
+.swal2-popup {
+  font-family: "Lexend", sans-serif; /* Usa la misma fuente de tu proyecto */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Sombra elegante */
+  background-color: #f8f9fa; /* Fondo gris claro */
+}
+
+/* 🔹 Título del modal */
+.swal2-title {
+  font-size: 16px;
+  color: #263d68; /* Texto oscuro */
+}
+
+/* 🔹 Cuerpo del modal */
+.swal2-html-container {
+  font-size: 16px;
+  color: #555;
+}
+
+/* 🔹 Inputs dentro del modal */
+.swal2-input, .swal2-select {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 13px;
+  width: 90%;
+  margin: 5px 0;
+}
+
+/* 🔹 Botón de confirmar */
+.swal2-confirm {
+  background-color: #263d68 !important; /* Azul de tu tema */
+  color: white !important;
+  border-radius: 5px !important;
+  font-size: 12px !important;
+  padding: 7px !important;
+}
+
+/* 🔹 Botón de cancelar */
+.swal2-cancel {
+  background-color: #f1031ba5 !important; /* Rojo */
+  color: white !important;
+  border-radius: 5px !important;
+  font-size: 12px !important;
+  padding: 7px !important;
+}
+
+/* 🔹 Hover en los botones */
+.swal2-confirm:hover {
+  background-color: white !important; /* Azul más oscuro */
+  color:#263d68 !important;
+}
+
+.swal2-cancel:hover {
+  background-color: white !important; /* Rojo más oscuro */
+  color:#f1031ba5 !important;
+}

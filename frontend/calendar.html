@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/daygrid.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <title>Calendario</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="more"><img src="assets/logoalfaro.jpg" alt="Logo Consultorios" class="logo-alfaro" title="Logo consultorios Alfaro"></div>
+                <div class="calendar"><a href="calendar.html" title="Calendario">Calendario</a></div>
+                <div class="agenda"><a href="agenda.html" title="Agenda">Agenda</a></div>
+                <div class="patients"><a href="patients.html" title="Pacientes">Pacientes</a></div>
+                <div class="professionals"><a href="professional.html" title="Profesionales">Profesionales</a></div>
+            </div>
+            <div class="navbar-user">
+                <button id="btn-user" type="button" title="Usuario">
+                    <i class="bx bx-user-circle"></i> Usuario
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div id="select-specialty">
+        <label for="specialty">Especialidad:</label>
+        <select id="specialty" name="specialty">
+            <option value="odontologia">Odontología</option>
+            <option value="pediatria">Pediatría</option>
+            <option value="psicologia">Psicología</option>
+            <option value="clinica">Clínica</option>
+            <option value="cardiologia">Cardiología</option>
+            <option value="traumatologia">Traumatología</option>
+        </select>
+    </div>
+    
+
+    <div id="calendar"></div>
+
+    <!-- Modal para ver los horarios disponibles y agendar un turno -->
+    <div id="time-slot-modal" class="modal">
+        <div class="modal-content1">
+            <!-- Contenedor para la tabla con scroll -->
+            <div class="table-container">
+                <!-- Tabla donde se mostrarán los horarios disponibles -->
+                <table id="availableSlots">
+                    <tbody>
+                        <!-- Aquí se llenarán las filas dinámicamente con los horarios -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Formulario de edición (inicialmente oculto) -->
+            <div id="editSlotForm" style="display:none; margin-top: 20px;">
+                <h3>Editar turno</h3>
+                <form id="formEditTurno">
+                    <label for="newTime">Hora del turno:</label>
+                    <input type="time" id="newTime" name="newTime" required><br><br>
+
+                    <label for="newStatus">Estado del turno:</label>
+                    <select id="newStatus" name="newStatus" required>
+                        <option value="disponible">Disponible</option>
+                        <option value="ocupado">Ocupado</option>
+                        <option value="en ejecución">En ejecución</option>
+                    </select><br><br>
+
+                    <button type="submit" id="saveChangesBtn">Guardar cambios</button>
+                    <button type="button" id="cancelEditBtn">Cancelar</button>
+                </form>
+            </div>
+
+            <button id="close-modal">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Reserva de Turno -->
+<div id="reserve-turno-modal" class="modal" style="display:none;">
+    <div class="modal-content2">
+        <form id="formReservaTurno">
+            <!-- Otros campos -->
+            <label for="professional">Profesional:</label>
+            <select id="professional" name="professional" required>
+                <option value="">Selecciona un profesional</option>
+            </select><br><br>
+            <button type="submit" id="confirmReservationBtn">Confirmar reserva</button>
+            <button type="button" id="cancelReservationBtn">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+      
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/daygrid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/interaction.min.js"></script>
+    <!-- Incluir dayjs antes de tu archivo JS -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+
+    <!-- Enlace a tu archivo JS -->
+    <script src="js/calendar.js"></script>
+
+</body>
+
+</html>

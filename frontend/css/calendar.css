@@ -1,0 +1,513 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lexend", serif;
+}
+
+body {
+  background-color: #eaeded4a;
+}
+
+header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 1000;
+  border-bottom: 1px solid #ccc;
+  max-height: 60px;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+}
+
+.navbar div {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.navbar .navbar-user {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: auto;
+  background-color: white;
+  text-align: center;
+}
+
+.logo-alfaro {
+  width: 40px;
+  height: 40px;
+}
+
+
+#btn-user {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  color: rgb(102, 102, 102);
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+#btn-user i {
+  font-size: 22px;
+  color: rgba(102, 102, 102, 0.915);
+  margin-right: 8px;
+}
+
+#btn-user:hover {
+  border-color: black;
+  transform: none;
+}
+
+#btn-user:focus {
+  outline: none;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #263d68;
+  font-size: 15px;
+  margin: 0 10px 0 10px;
+  text-shadow: 1px 1px 3px rgba(128, 128, 128, 0.608);
+}
+
+.navbar a:hover {
+  color: #ba0707;
+}
+
+.navbar a.selected {
+  color: #263d6855;
+}
+
+div.fc-header-toolbar.fc-toolbar.fc-toolbar-ltr {
+  margin-bottom: 5px;
+}
+
+/* Estilo solo para el botón de anterior */
+button.fc-button.fc-button-primary {
+  background-color: #263d68;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+button.fc-button.fc-button-primary:hover {
+  background-color: white;
+  cursor: pointer;
+  color: #263d68;
+}
+
+/* Estilo solo para el botón de siguiente */
+button.fc-next-button.fc-button.fc-button-primary {
+  background-color: #263d68;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button.fc-next-button.fc-button.fc-button-primary:hover {
+  background-color: white;
+  cursor: pointer;
+  color: #263d68;
+}
+
+/* Estilo solo para el botón de anterior */
+button.fc-today-button.fc-button.fc-button-primary {
+  background-color: #263d68;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+button.fc-today-button.fc-button.fc-button-primary:hover {
+  background-color: white;
+  cursor: pointer;
+  color: #263d68;
+}
+
+
+#calendar {
+  height: calc(100vh - 70px);
+  width: 90%;
+  padding-top: 5px;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 12px;
+  margin: 0 auto;
+  /* Centra horizontalmente */
+  display: block;
+}
+
+.fc-toolbar-title{
+  text-transform:uppercase;
+  font-weight: 400;
+  font-family: "Lexend", serif;
+}
+
+.fc-day-today {
+  background-color: rgba(0, 123, 255, 0.2) !important;
+}
+/* Estilos generales del modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  max-height: 95%;
+  background-color: rgb(243, 242, 242);
+  z-index: 1000;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.638);
+  overflow: hidden;
+  color: #7e7f7f;
+}
+
+/* Modal content común */
+.modal-content1,
+.modal-content2 {
+  background-color: rgb(243, 242, 242);
+  border-radius: 8px;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+/* Estilo para el contenedor de la tabla */
+.table-container {
+  width: 100%;
+  max-height: 80vh;
+  overflow: auto;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+/* Si la tabla dentro del contenedor es muy grande, asegurarse de que tenga un scroll */
+.table-container table {
+  width: 95%;
+}
+
+.table-container table th,
+.table-container table td {
+  padding: 3px;
+  text-align: center;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7e7f7f;
+}
+
+/* Estilo del título dentro de los modales */
+h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #263d68;
+}
+
+/* Estilo para los formularios */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+label {
+  font-size: 15px;
+}
+
+button {
+  padding: 5px 15px;
+  background-color: #263d68;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+  box-shadow: 1px 1px 3px grey;
+}
+
+button:hover {
+  background-color: white;
+  color: #263d68;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Botón de Cerrar para los modales */
+#close-modal {
+  background-color: #f1031ba5;
+  /* Rojo */
+  box-shadow: 1px 1px 3px grey;
+}
+
+#close-modal:hover {
+  background-color: white;
+  color: #f1031ba5;
+}
+
+/* Botón de cancelar en el modal de reserva */
+#cancelReservationBtn {
+  background-color: #f1031ba5;
+  /* Rojo */
+  box-shadow: 1px 1px 3px grey;
+}
+
+#cancelReservationBtn:hover {
+  background-color: white;
+  color: #f1031b;
+}
+
+/* Clase para los botones de "Modificar" y "Eliminar" en el modal de horarios */
+.btn-edit,
+.btn-delete {
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: #ffc107;
+  /* Amarillo para editar */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btn-delete {
+  background-color: #f1031ba5;
+  /* Rojo para eliminar */
+}
+
+.btn-edit:hover {
+  background-color: white;
+  color: #ffc107;
+}
+
+.btn-delete:hover {
+  background-color: white;
+  color: #f1031ba5;
+  opacity: 0.8;
+}
+
+/* Modal Oculto */
+.modal.hidden {
+  visibility: hidden;
+  /* Los modales ocultos no se muestran */
+  opacity: 0;
+  /* Hacerlos transparentes */
+  transition: visibility 0.3s, opacity 0.3s ease-in-out;
+}
+
+/* Modal Visible */
+.modal.visible {
+  visibility: visible;
+  /* Los modales visibles aparecen */
+  opacity: 1;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+}
+
+/* Modal específico para time-slot-modal */
+#time-slot-modal.visible {
+  background-color: rgb(243, 241, 241);
+  /* Fondo más oscuro */
+}
+
+/* Modal específico para reserve-turno-modal */
+#reserve-turno-modal.visible {
+  background-color: rgb(233, 231, 231);
+  /* Fondo más oscuro */
+}
+
+/* Estilo para la tabla de horarios disponibles */
+#availableSlotsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#availableSlotsTable th,
+#availableSlotsTable td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+#availableSlotsTable th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+
+#availableSlotsTable td button {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#availableSlotsTable td button:hover {
+  opacity: 0.8;
+}
+
+/* Estilos generales */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+label {
+  font-size: 12px;
+}
+
+
+
+.dropdown {
+  position: absolute;
+  z-index: 9999;
+  width: 98%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  /* Inicialmente oculto */
+}
+
+.dropdown .option {
+  padding: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #3498db;
+}
+
+.dropdown .option:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Clase para horarios disponibles */
+.available {
+  background-color: rgba(0, 128, 0, 0.213);
+}
+
+/* Clase para horarios ocupados */
+.occupied {
+  background-color: rgba(255, 0, 0, 0.118);
+}
+
+.mi-modal {
+  background-color: #222 !important;  /* Fondo oscuro */
+  color: white !important; /* Texto blanco */
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.mi-boton-confirmar {
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mi-boton-cancelar {
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: #f1031ba5;
+  /* Amarillo para editar */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+#select-specialty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 66px;
+  width: 100%;
+}
+
+#select-specialty label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #263d68;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+#select-specialty select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+#select-specialty select:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #eaf4ff;
+}
+
+/* Estilo para las opciones dentro del select */
+#select-specialty select option {
+  font-size: 14px;
+  padding: 5px;
+  background-color: white;
+  color: #263d68;
+}
+
+/* Cambia el color de las opciones al pasar el mouse */
+#select-specialty select option:hover {
+  background-color: #007bff;
+  color: white;
+}
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/daygrid.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <title>Admin</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="more"><img src="assets/logoalfaro.jpg" alt="Logo Consultorios" class="logo-alfaro"
+                        title="Logo consultorios Alfaro"></div>
+                <div class="calendar"><a href="calendar.html" title="Calendario">Calendario</a></div>
+                <div class="agenda"><a href="agenda.html" title="Agenda">Agenda</a></div>
+                <div class="patients"><a href="patients.html" title="Pacientes">Pacientes</a></div>
+                <div class="professionals"><a href="professional.html" title="Profesionales">Profesionales</a></div>
+                <div class="admin"><a href="adminDashboard.html" title="Admin">Admin</a></div>
+            </div>
+            <div class="navbar-user">
+                <button id="btn-user" type="button" title="Usuario">
+                    <i class="bx bx-user-circle"></i> Usuario
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="user-form-section">
+            <h2>Crear Usuario</h2>
+            <form id="user-form">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" title="Nombre de usuario" required>
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" title="Contraseña" required>
+
+                <label for="role">Rol:</label>
+                <select id="role" name="role" title="Rol" required>
+                    <option value="recepcion">recepción</option>
+                    <option value="profesional">profesional</option>
+                    <option value="admin">admin</option>
+                </select>
+
+                <button type="submit">Crear Usuario</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>

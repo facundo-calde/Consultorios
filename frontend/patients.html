@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/patients.css">
+    <!-- https://boxicons.com/ -->
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <title>Pacientes</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="more"><img src="assets/logoalfaro.jpg" alt="Logo Consultorios" class="logo-alfaro"
+                        title="Logo consultorios Alfaro"></div>
+                <div class="calendar"><a href="calendar.html" title="Calendario">Calendario</a></div>
+                <div class="agenda"><a href="agenda.html" title="Agenda">Agenda</a></div>
+                <div class="patients"><a href="patients.html" title="Pacientes">Pacientes</a></div>
+                <div class="professionals"><a href="professional.html" title="Profesionales">Profesionales</a></div>
+            </div>
+            <div class="navbar-user">
+                <button id="btn-user" type="button" title="Usuario">
+                    <i class="bx bx-user-circle"></i> Usuario
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sección para buscar pacientes -->
+    <section class="search-patient">
+        <form id="search-patient-form">
+            <div class="form-group">
+                <label for="search-dni">Pacientes</label>
+                <input type="text" id="search-dni" name="search-dni" placeholder="Buscador" required>
+                <button id="add-patient" type="submit" title="Nuevo paciente">Nuevo</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Tabla de pacientes -->
+    <section class="patients-table">
+        <table id="patients-table">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Telefono</th>
+                    <th>Email</th>
+                    <th>Cobertura</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se insertarán las filas dinámicamente -->
+            </tbody>
+        </table>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/patients.js"></script> <!-- Tu script debe ir después -->
+
+
+
+
+</body>
+
+</html>
