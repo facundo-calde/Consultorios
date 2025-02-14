@@ -9,34 +9,37 @@ exports.getTurnosOcupadosPorFecha = async (req, res) => {
 
   console.log("📢 Parámetros recibidos en la API:", { fecha, especialidad });
 
+  // Normalizar especialidad
   const normalizedSpecialty = removeAccents(especialidad.toLowerCase());
   console.log("📢 Especialidad normalizada:", normalizedSpecialty);
 
   try {
-    // Asegúrate de que la fecha que pasas a la consulta sea una cadena en formato YYYY-MM-DD
-    const normalizedFecha = fecha;  // Asumimos que ya tienes la fecha en el formato adecuado (YYYY-MM-DD)
+    // Asegurarse de que la fecha es válida
+    const normalizedFecha = fecha;  // Asumimos que la fecha ya está en el formato adecuado (YYYY-MM-DD)
 
-    // Buscar los turnos ocupados para la fecha específica
-    const turnosOcupados = await Turno.find({
-      date: normalizedFecha,  // Compara directamente la fecha como cadena
-      status: 'ocupado'
+    // Obtener los turnos para la fecha específica sin filtrar por estado
+    const turnos = await Turno.find({
+      date: normalizedFecha,  // Solo filtra por la fecha
     }).lean();
 
-    console.log("📢 Turnos ocupados encontrados:", turnosOcupados);
+    console.log("📢 Turnos encontrados:", turnos);
 
-    // Filtrar por especialidad
-    const filteredTurnos = turnosOcupados.filter(turno =>
+    // Filtrar los turnos por especialidad (si es necesario)
+    const filteredTurnos = turnos.filter(turno =>
       removeAccents(turno.especialidad.toLowerCase()) === normalizedSpecialty
     );
 
-    console.log("📢 Turnos ocupados después de filtrar por especialidad:", filteredTurnos);
+    console.log("📢 Turnos después de filtrar por especialidad:", filteredTurnos);
 
-    res.json(filteredTurnos);
+    // Enviar todos los turnos encontrados (filtrados por especialidad)
+    res.json(filteredTurnos);  // Devuelve los turnos con todos los estados, según la especialidad
   } catch (error) {
-    console.error("❌ Error al obtener los turnos ocupados:", error);
-    res.status(500).json({ message: "Error al obtener los turnos ocupados" });
+    console.error("❌ Error al obtener los turnos:", error);
+    res.status(500).json({ message: "Error al obtener los turnos" });
   }
 };
+
+
 
 // Función para eliminar acentos
 function removeAccents(str) {
@@ -152,7 +155,7 @@ exports.reservarTurno = async (req, res) => {
     const nuevoTurno = new Turno({
       time: hora,
       date: fecha,
-      status: "ocupado",
+      status: "Ocupado",
       paciente: new mongoose.Types.ObjectId(paciente),  // ✅ Convertimos a ObjectId
       profesional: new mongoose.Types.ObjectId(profesional),  // ✅ Convertimos también el profesional
       especialidad

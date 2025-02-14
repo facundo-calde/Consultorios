@@ -103,30 +103,33 @@ document.addEventListener('DOMContentLoaded', function () {
   function getAvailableSlots(occupiedSlots) {
     const horarios = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
 
+    // Inicializar todos los turnos como "Disponible"
     const availableSlots = horarios.map(time => ({
-      time,
-      status: 'disponible',
-      _id: null
+        time,
+        status: 'Disponible',  // Todos los horarios inician como disponibles
+        _id: null  // Inicializamos el _id en null, luego lo asignamos cuando sea ocupado
     }));
 
-    console.log("📢 Turnos ocupados recibidos en getAvailableSlots:", occupiedSlots); // Verificar datos entrantes
+    console.log("📢 Turnos ocupados recibidos en getAvailableSlots:", occupiedSlots);
 
+    // Recorrer los turnos ocupados y actualizar el estado de los turnos correspondientes
     occupiedSlots.forEach(occupiedSlot => {
-      const occupiedTime = occupiedSlot.time;
-      const slotIndex = availableSlots.findIndex(slot => slot.time === occupiedTime);
-      if (slotIndex !== -1) {
-        availableSlots[slotIndex].status = 'ocupado';
-        availableSlots[slotIndex]._id = occupiedSlot._id;
-      } else {
-        console.log(`Turno ${occupiedTime} no encontrado en horarios.`);
-      }
+        const occupiedTime = occupiedSlot.time;  // Hora del turno ocupado
+        const slotIndex = availableSlots.findIndex(slot => slot.time === occupiedTime);  // Encontrar el índice correspondiente
+
+        if (slotIndex !== -1) {
+            // Asegurarse de que el estado se mantenga consistente con los valores de la base de datos
+            availableSlots[slotIndex].status = occupiedSlot.status.charAt(0).toUpperCase() + occupiedSlot.status.slice(1); // Capitaliza la primera letra
+            availableSlots[slotIndex]._id = occupiedSlot._id;  // Asigna el ID correspondiente al slot
+        } else {
+            console.log(`Turno ${occupiedTime} no encontrado en horarios.`);  // Si no se encuentra, se ignora
+        }
     });
 
-
-    console.log("📢 Lista final de turnos disponibles y ocupados:", availableSlots); // 🔍 Verificar estructura final
+    console.log("📢 Lista final de turnos disponibles y ocupados:", availableSlots);
 
     return availableSlots;
-  }
+}
 
 
 
@@ -135,17 +138,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let scheduleHTML = `<h3>Horarios para el día ${selectedDate}:</h3><table id="availableSlotsTable"><tbody>`;
 
     availableSlots.forEach(slot => {
-      console.log("📢 Generando fila de turno:", slot); // Verificar datos antes de imprimir
+        console.log("📢 Generando fila de turno:", slot); // Verificar datos antes de imprimir
 
-      const status = slot.status === "disponible" ? "Disponible" : "Ocupado";
-      const colorClass = status === "Disponible" ? "available" : "occupied";
+        const status = slot.status;  // Usar el estado tal cual lo recibimos
+        const colorClass = getStatusColorClass(status);  // Función para obtener el color dependiendo del estado
 
-      const buttons = status === 'Disponible'
-        ? `<button class="btn-book" data-slot="${slot.time}" data-status="${status}" data-date="${selectedDate}">Reservar</button>`
-        : `<button class="btn-edit" data-id="${slot._id ? slot._id : ''}" data-time="${slot.time}" data-status="${status}">Modificar</button>
-           <button class="btn-delete" ${slot._id ? `data-id="${slot._id}"` : 'disabled'}>Eliminar</button>`;
+        const buttons = status === 'Disponible'
+            ? `<button class="btn-book" data-slot="${slot.time}" data-status="${status}" data-date="${selectedDate}">Reservar</button>`
+            : `<button class="btn-edit" data-id="${slot._id ? slot._id : ''}" data-time="${slot.time}" data-status="${status}">Modificar</button>
+               <button class="btn-delete" ${slot._id ? `data-id="${slot._id}"` : 'disabled'}>Eliminar</button>`;
 
-      scheduleHTML += `
+        scheduleHTML += `
             <tr>
                 <td>${slot.time}</td>
                 <td class="${colorClass}">${status}</td>
@@ -156,7 +159,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     scheduleHTML += `</tbody></table>`;
     return scheduleHTML;
-  }
+}
+
+function getStatusColorClass(status) {
+    switch (status) {
+        case 'Disponible':
+            return 'available';
+        case 'Ocupado':
+            return 'occupied';
+        case 'En ejecución':
+            return 'in-progress';
+        case 'Paciente asistió':
+            return 'attended';
+        case 'Paciente no asistió':
+            return 'no-attended';
+        default:
+            return 'available';
+    }
+}
 
 
   // Actualizar el contenedor de horarios disponibles
@@ -236,41 +256,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Verificar si el ID del turno está presente
     if (!selectedSlotId) {
-        console.error("No se encontró el ID del turno.");
-        return;
+      console.error("No se encontró el ID del turno.");
+      return;
     }
 
     console.log("Editando turno con ID:", selectedSlotId);
 
     // Obtener los datos del turno usando el ID
     fetch(`http://localhost:3000/api/calendar/turnos/${selectedSlotId}`)
-        .then(res => res.json())
-        .then(turno => {
-            if (!turno) {
-                console.error("No se encontró el turno.");
-                return;
+      .then(res => res.json())
+      .then(turno => {
+        if (!turno) {
+          console.error("No se encontró el turno.");
+          return;
+        }
+
+        // Verificar el ID del paciente
+        console.log("ID del paciente asociado al turno:", turno.paciente);
+
+        // Obtener el paciente asociado al turno
+        fetch(`http://localhost:3000/api/patients/${turno.paciente}`)
+          .then(res => res.json())
+          .then(patient => {
+            if (!patient) {
+              console.error("No se encontró el paciente.");
+              return;
             }
 
-            // Verificar el ID del paciente
-            console.log("ID del paciente asociado al turno:", turno.paciente);
+            // Mostrar el nombre y apellido del paciente
+            const patientName = `${patient.firstName} ${patient.lastName}`;
+            console.log("Nombre del paciente:", patientName);
 
-            // Obtener el paciente asociado al turno
-            fetch(`http://localhost:3000/api/patients/${turno.paciente}`)
-                .then(res => res.json())
-                .then(patient => {
-                    if (!patient) {
-                        console.error("No se encontró el paciente.");
-                        return;
-                    }
-
-                    // Mostrar el nombre y apellido del paciente
-                    const patientName = `${patient.firstName} ${patient.lastName}`;
-                    console.log("Nombre del paciente:", patientName);
-
-                    // Mostrar el formulario de edición usando SweetAlert2
-                    Swal.fire({
-                      title: "Editar Turno",
-                      html: `
+            // Mostrar el formulario de edición usando SweetAlert2
+            Swal.fire({
+              title: "Editar Turno",
+              html: `
                           <div style="margin-top: 20px;">
                               <label for="patientName">Paciente:</label>
                               <input type="text" id="patientName" value="${patientName}" required readonly><br><br>
@@ -278,59 +298,58 @@ document.addEventListener('DOMContentLoaded', function () {
                               <label for="newStatus">Estado del turno:</label>
                               <select id="newStatus" name="newStatus" required>
                                   <option value="Ocupado" ${turno.status === 'Ocupado' ? 'selected' : ''}>Ocupado</option>
-                                  <option value="En ejecución" ${turno.status === 'En ejecución' ? 'selected' : ''}>En ejecución</option>
                                   <option value="Paciente asistió" ${turno.status === 'Paciente asistió' ? 'selected' : ''}>Paciente asistió</option>
                                   <option value="Paciente no asistió" ${turno.status === 'Paciente no asistió' ? 'selected' : ''}>Paciente no asistió</option>
                               </select><br><br>
                           </div>
                       `,
-                      showCancelButton: true,
-                      confirmButtonText: "Guardar cambios",
-                      cancelButtonText: "Cancelar",
-                      preConfirm: () => {
-                          const newStatus = document.getElementById("newStatus").value;
-                  
-                          if (!newStatus) {
-                              Swal.showValidationMessage("Por favor, selecciona un estado.");
-                              return false;
-                          }
-                  
-                          return { status: newStatus };
-                      }
-                  }).then((result) => {
-                      if (result.isConfirmed) {
-                          // Si se confirmaron los cambios, actualizar solo el estado en el servidor
-                          const updatedData = result.value;
-                  
-                          fetch(`http://localhost:3000/api/calendar/turnos/modificar/${selectedSlotId}`, {
-                              method: 'PUT',
-                              headers: {
-                                  'Content-Type': 'application/json'
-                              },
-                              body: JSON.stringify(updatedData)
-                          })
-                          .then(res => res.json())
-                          .then(data => {
-                              console.log("Turno actualizado:", data);
-                              Swal.fire("Éxito", "El estado del turno ha sido modificado correctamente.", "success");
-                          })
-                          .catch(error => {
-                              console.error("Error al modificar el turno:", error);
-                              Swal.fire("Error", "Hubo un problema al modificar el turno.", "error");
-                          });
-                      }
-                  });                  
+              showCancelButton: true,
+              confirmButtonText: "Guardar cambios",
+              cancelButtonText: "Cancelar",
+              preConfirm: () => {
+                const newStatus = document.getElementById("newStatus").value;
+
+                if (!newStatus) {
+                  Swal.showValidationMessage("Por favor, selecciona un estado.");
+                  return false;
+                }
+
+                return { status: newStatus };
+              }
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Si se confirmaron los cambios, actualizar solo el estado en el servidor
+                const updatedData = result.value;
+
+                fetch(`http://localhost:3000/api/calendar/turnos/modificar/${selectedSlotId}`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(updatedData)
                 })
-                .catch(error => {
-                    console.error("Error al obtener los datos del paciente:", error);
-                    Swal.fire("Error", "Hubo un problema al obtener los datos del paciente.", "error");
-                });
-        })
-        .catch(error => {
-            console.error("Error al obtener el turno:", error);
-            Swal.fire("Error", "Hubo un problema al obtener el turno.", "error");
-        });
-}
+                  .then(res => res.json())
+                  .then(data => {
+                    console.log("Turno actualizado:", data);
+                    Swal.fire("Éxito", "El estado del turno ha sido modificado correctamente.", "success");
+                  })
+                  .catch(error => {
+                    console.error("Error al modificar el turno:", error);
+                    Swal.fire("Error", "Hubo un problema al modificar el turno.", "error");
+                  });
+              }
+            });
+          })
+          .catch(error => {
+            console.error("Error al obtener los datos del paciente:", error);
+            Swal.fire("Error", "Hubo un problema al obtener los datos del paciente.", "error");
+          });
+      })
+      .catch(error => {
+        console.error("Error al obtener el turno:", error);
+        Swal.fire("Error", "Hubo un problema al obtener el turno.", "error");
+      });
+  }
 
 
 
@@ -344,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log("📌 ID del turno seleccionado:", slotId); // 👀 Verificar qué se está recibiendo
 
-    if (slotStatus !== 'ocupado') {
+    if (slotStatus !== 'Ocupado') {
       hideAllModals();
       selectedSlot = slotId;
       showReservationForm(selectedSlot);
@@ -536,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function () {
           text: "No se encontró el turno o hubo un problema con la API.",
         });
       });
-}
+  }
 
 
 
