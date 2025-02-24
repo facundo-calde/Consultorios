@@ -159,7 +159,7 @@ function renderPatients(patients) {
             </td>
             <td>${patient.coverage || "Sin Cobertura"}</td>
             <td>
-                <button class="edit-btn" data-id="${patient._id}">✏️</button>  
+                <button class="edit-btn" data-id="${patient._id}" title="Modificar">✏️</button>  
                 ${hasHistory ? `<button class="history-btn" data-id="${patient._id}" title="Ver Historial Clínico">
                     <i class="bx bx-history"></i>
                 </button>` : ''}
