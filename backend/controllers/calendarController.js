@@ -65,32 +65,23 @@ exports.getProfesionalesDisponiblesPorFecha = async (req, res) => {
   try {
     console.log("📢 Fecha recibida (antes de procesar):", fecha);
 
-    // 🔹 Asegurar que la fecha sea YYYY-MM-DD antes de procesarla
     if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
       return res.status(400).json({ message: "Formato de fecha inválido. Se espera YYYY-MM-DD" });
     }
 
-    // 🔹 Crear un objeto Date de forma segura
-    const dateObj = new Date(`${fecha}T00:00:00Z`); // Aseguramos que la fecha esté en UTC
-    
-    // 🔹 Función para normalizar el texto
+    const dateObj = new Date(`${fecha}T00:00:00Z`);
     const normalizeText = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
-    // 🔹 Obtener el día de la semana correctamente y normalizarlo
     const dayOfWeek = normalizeText(
-        new Intl.DateTimeFormat('es-ES', { weekday: 'long', timeZone: 'UTC' }).format(dateObj)
+      new Intl.DateTimeFormat('es-ES', { weekday: 'long', timeZone: 'UTC' }).format(dateObj)
     );
-
     console.log("📅 Día de la semana detectado (normalizado):", dayOfWeek);
 
-    // 🔹 Buscar en la base de datos
-    const profesionalesDisponibles = await Profesional.find({}).lean(); // Obtener todos
+    // Obtenemos todos los profesionales sin filtrar por días laborales
+    const profesionalesDisponibles = await Profesional.find({}).lean();
 
-    // 🔹 Normalizar y filtrar los profesionales disponibles
-    const filteredProfessionals = profesionalesDisponibles.filter(prof => {
-        const normalizedWorkDays = prof.diasLaborales.map(dia => normalizeText(dia));
-        return normalizedWorkDays.includes(dayOfWeek);
-    });
+    // Opción 1: Asignar a filteredProfessionals el valor completo
+    const filteredProfessionals = profesionalesDisponibles;
 
     console.log("📢 Profesionales filtrados:", filteredProfessionals);
 
@@ -104,9 +95,6 @@ exports.getProfesionalesDisponiblesPorFecha = async (req, res) => {
     res.status(500).json({ message: "Error al obtener los profesionales disponibles" });
   }
 };
-
-
-
 
 
 // Reservar turno

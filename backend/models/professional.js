@@ -1,40 +1,51 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const profesionalSchema = new mongoose.Schema({
+  originalId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   nombre: {
     type: String,
-    required: true,  // Aseguramos que el nombre sea obligatorio
-    maxlength: 100,  // Limitar el largo del nombre
+    required: true,
+    maxlength: 100,
   },
   apellido: {
     type: String,
-    required: true,  // Aseguramos que el apellido sea obligatorio
-    maxlength: 100,  // Limitar el largo del apellido
+    required: true,
+    maxlength: 100,
   },
   dni: {
     type: String,
-    required: true,  // Aseguramos que el DNI sea obligatorio
-    unique: true,  // El DNI debe ser único
-    minlength: 7,  // El mínimo de caracteres de un DNI (esto puede variar según país)
-    maxlength: 8,  // El máximo de caracteres de un DNI
+    required: false, // 🔥 Cambiar a "false" para permitir valores nulos o "N/A"
+    unique: false,   // 🔥 Eliminar la restricción de unicidad para evitar duplicados
   },
   email: {
     type: String,
-    required: true,  // Aseguramos que el correo electrónico sea obligatorio
-    unique: true,  // Aseguramos que no se repita
-    match: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,  // Validación simple para un correo electrónico
+    required: false, // 🔥 Cambiar a "false" para evitar problemas con dispositivos
+    unique: false,   // 🔥 Evita errores de duplicados en emails
   },
   especialidad: {
     type: [String],
-    required: true,  // Aseguramos que la especialidad sea obligatoria
+    required: false,
   },
   diasLaborales: {
-    type: [String],  // Es un array de strings para representar los días laborales
-    required: true,  // Aseguramos que siempre haya días laborales
-    enum: ['lunes', 'martes', 'miércoles', 'jueves', 'viernes'],  // Los días de la semana como valores posibles
+    type: [String],
+    required: false,
+    enum: ["lunes", "martes", "miércoles", "jueves", "viernes"],
+  },
+  tipo: {
+    type: String,
+    enum: ["human", "device"],
+    required: true,
+  },
+  eliminado: {
+    type: Boolean,
+    default: false,
   },
 });
 
-const Profesional = mongoose.model('professional', profesionalSchema);
+const Professional = mongoose.model("professional", profesionalSchema);
 
-module.exports = Profesional;
+module.exports = Professional;

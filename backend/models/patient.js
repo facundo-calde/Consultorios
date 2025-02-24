@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 // Definir el esquema para el paciente
 const patientSchema = new mongoose.Schema({
+  originalId: {
+    type: String,
+    required: true,
+    unique: true  // 🔥 Evita duplicados en base al ID original del JSONL
+  },
   firstName: {
     type: String,
     required: true,
@@ -46,27 +51,31 @@ const patientSchema = new mongoose.Schema({
   },
   medicalHistory: [
     {
-      condition: {
+      condition: {  
         type: String,
         required: true
       },
-      diagnosisDate: {
+      diagnosisDate: {  
         type: Date,
         required: true
       },
-      treatment: {
+      treatment: {  
         type: String,
-        required: true
+        required: false
       },
-      doctorNote: {
+      doctorNote: {  
         type: String,
-        required: true
+        required: false
       },
-      files: [{ 
+      files: [{  
         fileName: String,
         fileUrl: String,
         fileType: String
-      }]
+      }],
+      createdBy: {  
+        type: String,
+        required: true
+      }
     }
   ],
   dni: {
@@ -74,18 +83,20 @@ const patientSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  coverage: {  // 🔥 Nuevo campo agregado para cobertura médica
+  coverage: {  
     type: String,
-    required: false, // No es obligatorio
-    default: "Sin Cobertura" // Valor por defecto
+    required: false, 
+    default: "Sin Cobertura" 
   }
 }, {
   timestamps: true 
 });
 
+
 // Crear el modelo basado en el esquema
 const Patient = mongoose.model('Patient', patientSchema);
 
 module.exports = Patient;
+
 
 

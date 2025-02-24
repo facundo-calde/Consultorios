@@ -171,7 +171,7 @@ function getStatusColorClass(status) {
             return 'in-progress';
         case 'Paciente asistió':
             return 'attended';
-        case 'Paciente no asistió':
+        case 'En espera':
             return 'no-attended';
         default:
             return 'available';
@@ -299,7 +299,7 @@ function getStatusColorClass(status) {
                               <select id="newStatus" name="newStatus" required>
                                   <option value="Ocupado" ${turno.status === 'Ocupado' ? 'selected' : ''}>Ocupado</option>
                                   <option value="Paciente asistió" ${turno.status === 'Paciente asistió' ? 'selected' : ''}>Paciente asistió</option>
-                                  <option value="Paciente no asistió" ${turno.status === 'Paciente no asistió' ? 'selected' : ''}>Paciente no asistió</option>
+                                  <option value="Paciente no asistió" ${turno.status === 'En espera' ? 'selected' : ''}>En espera</option>
                               </select><br><br>
                           </div>
                       `,
@@ -804,15 +804,11 @@ document.getElementById('patient').addEventListener('input', function (event) {
 
 // Función para cargar los profesionales según la especialidad y la fecha
 function loadProfessionals(selectedDate, selectedSpecialty) {
-  const selectedDateObj = new Date(selectedDate);
-  const utcDate = new Date(selectedDateObj.getTime() + selectedDateObj.getTimezoneOffset() * 60000);
-  const localDate = new Date(utcDate);
-  const dayOfWeek = localDate.getDay();
-  const daysOfWeek = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-  const selectedDay = daysOfWeek[dayOfWeek];
+  // No necesitamos obtener ni comparar el día seleccionado
 
-  // Normaliza la especialidad seleccionada
-  const normalizeString = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  // Función para normalizar cadenas
+  const normalizeString = str =>
+    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   fetch('http://localhost:3000/api/professionals')
     .then(response => {
@@ -822,10 +818,10 @@ function loadProfessionals(selectedDate, selectedSpecialty) {
       return response.json();
     })
     .then(professionals => {
-      console.log("Profesionales recibidos de la API:", professionals); // Verifica los datos recibidos
+      console.log("Profesionales recibidos de la API:", professionals);
 
       const professionalSelect = document.getElementById('professional');
-      professionalSelect.innerHTML = ''; // Limpiar las opciones previas
+      professionalSelect.innerHTML = ''; // Limpiar opciones previas
 
       const defaultOption = document.createElement('option');
       defaultOption.value = '';
@@ -833,32 +829,27 @@ function loadProfessionals(selectedDate, selectedSpecialty) {
       professionalSelect.appendChild(defaultOption);
 
       let optionsAdded = false;
+      const normalizedSpecialty = normalizeString(selectedSpecialty);
 
-      // Filtrar los profesionales por la especialidad seleccionada y por el día disponible
       professionals.forEach(prof => {
-        const professionalAvailableDays = prof.diasLaborales.map(day => day.toLowerCase());
+        // Manejo de especialidad como array o string
+        let professionalSpecialties;
+        if (Array.isArray(prof.especialidad)) {
+          professionalSpecialties = prof.especialidad.map(especialidad =>
+            normalizeString(especialidad)
+          );
+        } else {
+          professionalSpecialties = normalizeString(prof.especialidad);
+        }
 
-        console.log(`Profesional: ${prof.nombre} ${prof.apellido} - Especialidad: ${prof.especialidad}, Días: ${prof.diasLaborales}`);
-
-        // Depuración de los valores que se comparan
-        console.log(`Comparando especialidad seleccionada: ${selectedSpecialty} con: ${prof.especialidad}`);
-        console.log(`Comparando días laborales seleccionados: ${selectedDay} con: ${professionalAvailableDays}`);
-
-        // Asegúrate de que la especialidad seleccionada esté en minúsculas y sin caracteres especiales
-        const normalizedSpecialty = normalizeString(selectedSpecialty);  // Normaliza la especialidad seleccionada
-        const professionalSpecialty = prof.especialidad.map(especialidad => normalizeString(especialidad));  // Normaliza las especialidades del profesional
-
-        console.log(`Normalized Specialty: ${normalizedSpecialty}`);
-        console.log(`Professional Specialties: ${professionalSpecialty}`);
-        console.log(`Selected Day: ${selectedDay}`);
-        console.log(`Available Days: ${professionalAvailableDays}`);
-
-        // Verifica si la especialidad y el día coinciden
-        if (normalizedSpecialty && professionalSpecialty.includes(normalizedSpecialty) && professionalAvailableDays.includes(selectedDay)) {
+        // Filtrar solo por especialidad
+        if (
+          (Array.isArray(professionalSpecialties) && professionalSpecialties.includes(normalizedSpecialty)) ||
+          (!Array.isArray(professionalSpecialties) && professionalSpecialties === normalizedSpecialty)
+        ) {
           const option = document.createElement('option');
-          option.value = prof._id;  // Usamos el _id del profesional como valor
+          option.value = prof._id;
           option.textContent = `${prof.nombre} ${prof.apellido}`;
-
           professionalSelect.appendChild(option);
           optionsAdded = true;
         }
@@ -867,7 +858,7 @@ function loadProfessionals(selectedDate, selectedSpecialty) {
       if (!optionsAdded) {
         const noProfessionalsOption = document.createElement('option');
         noProfessionalsOption.value = '';
-        noProfessionalsOption.textContent = 'No hay profesionales disponibles para esta especialidad y día';
+        noProfessionalsOption.textContent = 'No hay profesionales disponibles para esta especialidad';
         professionalSelect.appendChild(noProfessionalsOption);
       }
     })
@@ -875,6 +866,7 @@ function loadProfessionals(selectedDate, selectedSpecialty) {
       console.error('Error al cargar los profesionales:', error);
     });
 }
+
 
 
 

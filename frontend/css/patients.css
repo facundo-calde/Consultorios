@@ -172,7 +172,7 @@ header {
 /* 🔹 Estilo general de la tabla */
 #patients-table {
   width: 100%;
-  max-width: 1000px; /* Evita que sea muy ancha en pantallas grandes */
+  max-width: 1250px; /* Evita que sea muy ancha en pantallas grandes */
   border-collapse: separate; /* 🔥 Cambiado de collapse a separate */
   border-spacing: 0; /* 🔥 Evita separación extra entre celdas */
   background-color: white;

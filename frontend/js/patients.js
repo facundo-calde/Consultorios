@@ -4,6 +4,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const addPatientBtn = document.getElementById("add-patient");
     const API_URL = "http://localhost:3000/api/patients";
 
+    // Cargar pacientes al iniciar
+    fetchPatients();
+
+    // Evento para buscar pacientes por DNI cuando se escribe en el input
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            searchPatientsByDNI(e.target.value);
+        });
+    }
+
+    // Evento para abrir el modal de agregar nuevo paciente
+    if (addPatientBtn) {
+        addPatientBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            openAddPatientModal();
+        });
+    }
+
+
     // 🔹 Obtener todos los pacientes al cargar la página
     async function fetchPatients() {
         try {
@@ -17,26 +36,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 🔹 Buscar pacientes por DNI
     async function searchPatientsByDNI(dni) {
-        if (dni.trim() === "") {
+        if (dni.trim() === "" || dni.trim().length < 3) { // si está vacío o tiene menos de 3 dígitos, carga todos
             fetchPatients();
             return;
         }
-
-        const cleanDNI = dni.replace(/\./g, "");
-
+    
+        const cleanDNI = dni.replace(/\D/g, ""); // elimina cualquier caracter que no sea dígito
+    
         try {
-            const response = await fetch(`${API_URL}/buscar/${cleanDNI}`);
-            if (!response.ok) throw new Error("Error al buscar pacientes");
-
-            const patients = await response.json();
-            renderPatients(patients);
+            const response = await fetch(`${API_URL}/buscarPorDNI/${cleanDNI}`);
+            const data = await response.json();
+            console.log("Resultado de búsqueda:", data);
+            if (!response.ok) {
+                throw new Error(data.message || "Error al buscar pacientes");
+            }
+            renderPatients(data);
         } catch (error) {
             console.error("Error:", error);
-            Swal.fire("Error", "No se encontraron pacientes con ese DNI", "error");
+            Swal.fire("Error", error.message || "No se encontraron pacientes con ese DNI", "error");
         }
     }
+    
+    
 
     function editPatient(patient) {
         if (!patient) {
@@ -50,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <input id="swal-firstName" class="swal2-input" placeholder="Nombre" value="${patient.firstName}">
                 <input id="swal-lastName" class="swal2-input" placeholder="Apellido" value="${patient.lastName}">
                 <input id="swal-dni" class="swal2-input" placeholder="DNI" value="${patient.dni}" maxlength="8">
-                <input id="swal-dateOfBirth" type="date" class="swal2-input" value="${patient.dateOfBirth || ''}">
+                <input id="swal-dateOfBirth" type="date" class="swal2-input" value="${patient.dateOfBirth ? patient.dateOfBirth.substring(0,10) : ''}">
                 <select id="swal-gender" class="swal2-input">
                     <option value="masculino" ${patient.gender === "masculino" ? "selected" : ""}>Masculino</option>
                     <option value="femenino" ${patient.gender === "femenino" ? "selected" : ""}>Femenino</option>
@@ -115,100 +137,96 @@ document.addEventListener("DOMContentLoaded", () => {
     
     
     // 🔹 Renderizar pacientes en la tabla y asignar eventos
-    function renderPatients(patients) {
-        patientsTableBody.innerHTML = ""; // Limpiar la tabla antes de agregar nuevos datos
+function renderPatients(patients) {
+    patientsTableBody.innerHTML = ""; // Limpiar la tabla antes de agregar nuevos datos
 
-        patients.forEach(patient => {
-            const row = document.createElement("tr");
+    patients.forEach(patient => {
+        // Verificamos si el paciente tiene historial clínico
+        const hasHistory = Array.isArray(patient.medicalHistory) && patient.medicalHistory.length > 0;
+        const row = document.createElement("tr");
 
-            row.innerHTML = `
-                <td>${patient.firstName}</td>  
-                <td>${patient.lastName}</td>   
-                <td>${patient.dni}</td>
-                <td class="phone-cell">
-                    <a href="https://wa.me/${patient.phoneNumber}" target="_blank" class="whatsapp-link">
-                        <i class="bx bxl-whatsapp"></i> ${patient.phoneNumber}
-                    </a>
-                </td>
-                <td>
-                    <a href="mailto:${patient.email}" class="email-link">${patient.email}</a>
-                </td>
-                <td>${patient.coverage || "Sin Cobertura"}</td>
-                <td>
-                    <button class="edit-btn" data-id="${patient._id}">✏️</button>  
-                    <button class="delete-btn" data-id="${patient._id}">🗑️</button>  
-                </td>
-            `;
+        row.innerHTML = `
+            <td>${patient.firstName}</td>  
+            <td>${patient.lastName}</td>   
+            <td>${patient.dni}</td>
+            <td class="phone-cell">
+                <a href="https://wa.me/${patient.phoneNumber}" target="_blank" class="whatsapp-link">
+                    <i class="bx bxl-whatsapp"></i> ${patient.phoneNumber}
+                </a>
+            </td>
+            <td>
+                <a href="mailto:${patient.email}" class="email-link">${patient.email}</a>
+            </td>
+            <td>${patient.coverage || "Sin Cobertura"}</td>
+            <td>
+                <button class="edit-btn" data-id="${patient._id}">✏️</button>  
+                ${hasHistory ? `<button class="history-btn" data-id="${patient._id}" title="Ver Historial Clínico">
+                    <i class="bx bx-history"></i>
+                </button>` : ''}
+            </td>
+        `;
 
-            patientsTableBody.appendChild(row);
+        patientsTableBody.appendChild(row);
+    });
+
+    // Asignar eventos a los botones de edición
+    document.querySelectorAll(".edit-btn").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const patientId = e.target.getAttribute("data-id");
+            const patient = patients.find(p => p._id === patientId);
+            editPatient(patient);
         });
+    });
 
-        // 🔹 Volver a asignar eventos a los botones después de renderizar la tabla
-        document.querySelectorAll(".edit-btn").forEach(button => {
-            button.addEventListener("click", (e) => {
-                const patientId = e.target.getAttribute("data-id");
-                const patient = patients.find(p => p._id === patientId);
-                editPatient(patient);
+    // Asignar eventos a los botones de eliminación
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const patientId = e.target.getAttribute("data-id");
+            confirmDeletePatient(patientId);
+        });
+    });
+
+    // Asignar eventos al botón de historial clínico
+    document.querySelectorAll(".history-btn").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const patientId = e.currentTarget.getAttribute("data-id");
+            const patient = patients.find(p => p._id === patientId);
+            if (patient && Array.isArray(patient.medicalHistory) && patient.medicalHistory.length) {
+                viewClinicalHistory(patient.medicalHistory);
+            } else {
+                Swal.fire("Sin historial", "Este paciente no tiene historial clínico.", "info");
+            }
+        });
+    });
+    
+}
+
+// Función para mostrar el historial clínico en un modal
+function viewClinicalHistory(medicalHistory) {
+    let html = '<div style="text-align: left; max-height:300px; overflow:auto;">';
+    medicalHistory.forEach((entry, index) => {
+        html += `<p>
+            <strong>Entrada ${index + 1}</strong><br>
+            Condición: ${entry.condition || 'N/D'}<br>
+            Tratamiento: ${entry.treatment || 'N/D'}<br>
+            Fecha: ${entry.diagnosisDate ? new Date(entry.diagnosisDate).toLocaleDateString() : 'N/D'}<br>`;
+        // Si existen archivos en esta entrada
+        if (Array.isArray(entry.files) && entry.files.length > 0) {
+            html += "Archivos:<br>";
+            entry.files.forEach((file, idx) => {
+                html += `<a href="${file.fileUrl}" target="_blank">Archivo ${idx + 1}</a><br>`;
             });
-        });
-
-        document.querySelectorAll(".delete-btn").forEach(button => {
-            button.addEventListener("click", (e) => {
-                const patientId = e.target.getAttribute("data-id");
-                confirmDeletePatient(patientId);
-            });
-        });
-    }
-
-    // 🔹 Evento para buscar pacientes cuando se escribe en el input
-    if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
-            searchPatientsByDNI(e.target.value.trim());
-        });
-    }
-
-    // 🔹 Evento para abrir el modal de agregar paciente
-    if (addPatientBtn) {
-        addPatientBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            openAddPatientModal();
-        });
-    }
-
-    // 🔹 Confirmación antes de eliminar un paciente
-    async function confirmDeletePatient(patientId) {
-        const result = await Swal.fire({
-            title: "¿Estás seguro?",
-            text: "Esta acción no se puede deshacer.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
-        });
-
-        if (result.isConfirmed) {
-            deletePatient(patientId);
         }
-    }
+        html += `</p><hr>`;
+    });
+    html += '</div>';
 
-    // 🔹 Función para eliminar un paciente
-    async function deletePatient(patientId) {
-        try {
-            const response = await fetch(`${API_URL}/${patientId}`, {
-                method: "DELETE"
-            });
-
-            if (!response.ok) throw new Error("Error al eliminar el paciente");
-
-            Swal.fire("Paciente Eliminado", "El paciente ha sido eliminado correctamente.", "success");
-            fetchPatients();
-        } catch (error) {
-            Swal.fire("Error", "No se pudo eliminar el paciente.", "error");
-            console.error("Error:", error);
-        }
-    }
+    Swal.fire({
+        title: "Historial Clínico",
+        html,
+        width: '600px'
+    });
+}
 
     // 🔹 Función para abrir el modal de agregar paciente
     async function openAddPatientModal() {
