@@ -2,26 +2,22 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Lexend", serif;
 }
 
 body {
   background-color: #eaeded4a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Ocupa toda la pantalla */
 }
-
 
 header {
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #fff;
+  background-color: white;
   z-index: 1000;
   border-bottom: 1px solid #ccc;
-  max-height: 70px;
+  max-height: 60px;
   box-sizing: border-box;
 }
 
@@ -29,8 +25,8 @@ header {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 5px;
   width: 100%;
+  padding: 4px;
 }
 
 .navbar div {
@@ -44,25 +40,21 @@ header {
   margin-right: 0;
 }
 
-.more button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
-    background-color: #ffffff;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    cursor: pointer;
+.more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: auto;
+  background-color: white;
+  text-align: center;
 }
 
-.more button i {
-  font-size: 30px;
-  color: #3498db;
+.logo-alfaro {
+  width: 40px;
+  height: 40px;
 }
 
-.more button:hover {
-  border-color: #3498db;
-}
 
 #btn-user {
   display: flex;
@@ -73,14 +65,15 @@ header {
   border: 1px solid transparent;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   transition: background-color 0.3s ease;
   box-sizing: border-box;
+  box-shadow: 1px 1px 3px grey;
 }
 
 #btn-user i {
-  font-size: 32px;
-  color:rgba(102, 102, 102, 0.915) ;
+  font-size: 22px;
+  color: rgba(102, 102, 102, 0.915);
   margin-right: 8px;
 }
 
@@ -95,16 +88,82 @@ header {
 
 .navbar a {
   text-decoration: none;
-  color: #7e7f7f;
-  font-size: 20px;
+  color: #263d68;
+  font-size: 15px;
   margin: 0 10px 0 10px;
+  text-shadow: 1px 1px 3px rgba(128, 128, 128, 0.608);
 }
 
 .navbar a:hover {
-  color: #525151;
+  color: #ba0707;
 }
 
 .navbar a.selected {
-  color: #525151;
+  color: #263d6855;
 }
 
+.user-form-section {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-form-section h2 {
+  text-align: center;
+  font-size: 15px;
+  color: #263d68;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px rgba(128, 128, 128, 0.144);
+}
+
+#user-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#user-form label {
+  font-size: 12px;
+  color: #525151;
+  margin-bottom: 5px;
+}
+
+#user-form input, 
+#user-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+#user-form select {
+  background-color: #fff;
+  color: #525151;
+  cursor: pointer;
+}
+
+#user-form select:focus {
+  border-color: #263d68;
+  outline: none;
+}
+
+#user-form button {
+  background-color: #263d68;
+  color: white;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#user-form button:hover {
+  background-color: white;
+  color: #263d68;
+  border: 1px solid #263d68;
+}

@@ -28,9 +28,11 @@
                 <div class="admin"><a href="adminDashboard.html" title="Admin">Admin</a></div>
             </div>
             <div class="navbar-user">
-                <button id="btn-user" type="button" title="Usuario">
-                    <i class="bx bx-user-circle"></i> Usuario
-                </button>
+                <form action="user.html" style="display:inline;">
+                    <button id="btn-user" type="submit" title="Usuario">
+                      <i class="bx bx-user-circle"></i> Usuario
+                    </button>
+                  </form>        
             </div>
         </nav>
     </header>
@@ -46,9 +48,9 @@
 
                 <label for="role">Rol:</label>
                 <select id="role" name="role" title="Rol" required>
-                    <option value="recepcion">recepción</option>
-                    <option value="profesional">profesional</option>
-                    <option value="admin">admin</option>
+                    <option value="recepcion">Recepción</option>
+                    <option value="profesional">Profesional</option>
+                    <option value="admin">Admin</option>
                 </select>
 
                 <button type="submit">Crear Usuario</button>

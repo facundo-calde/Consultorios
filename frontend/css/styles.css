@@ -150,4 +150,36 @@ a:hover{
     color: #ddd;
   }
   
+  .my-swal-popup {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+  }
+  
+  .my-swal-title {
+    color: #333;
+    font-family: "Lexend", sans-serif;
+    font-size: 24px;
+  }
+  
+  .my-swal-confirm {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+  }
+  
+  .my-swal-cancel {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+  }
+  
+  .my-swal-input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+  }
   
